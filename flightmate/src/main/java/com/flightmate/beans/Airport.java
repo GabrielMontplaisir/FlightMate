@@ -1,16 +1,16 @@
 package com.flightmate.beans;
 
 public class Airport {
-	private int id;
-	private String airport_name, city, country;
-	private String airport_code;
+    private int airportId;
+	private String airportName, city, country;
+	private String airportCode;
 	private int runways;	
 	
 	// Constructor	
-	public Airport(int id, String airport_name, String airport_code, String city, String country, int runways) {
-		this.id = id;
-		this.airport_name = airport_name;
-		this.airport_code = airport_code;
+	public Airport(int airportId, String airportName, String airportCode, String city, String country, int runways) {
+		this.airportId = airportId;
+		this.airportName = airportName;
+		this.airportCode = airportCode;
 		this.city = city;
 		this.country = country;
 		this.runways = runways;
@@ -18,14 +18,14 @@ public class Airport {
 	
 	// Getter / Setter Methods
 	
-	public int getId() {return id;}
+	public int getAirportId() {return airportId;}
 		
-	public String getAirport_name() {
-		return airport_name;
+	public String getAirportName() {
+		return airportName;
 	}
 
-	public void setAirport_name(String airport_name) {
-		this.airport_name = airport_name;
+	public void setAirportName(String airportName) {
+		this.airportName = airportName;
 	}
 
 	public String getCity() {
@@ -44,12 +44,12 @@ public class Airport {
 		this.country = country;
 	}
 
-	public String getAirport_code() {
-		return airport_code;
+	public String getAirportCode() {
+		return airportCode;
 	}
 
-	public void setAirport_code(String airport_code) {
-		this.airport_code = airport_code;
+	public void setAirportCode(String airportCode) {
+		this.airportCode = airportCode;
 	}
 
 	public int getRunways() {
@@ -59,5 +59,4 @@ public class Airport {
 	public void setRunways(int runways) {
 		this.runways = runways;
 	}	
-	
 }

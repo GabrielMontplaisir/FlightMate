@@ -47,6 +47,6 @@ public class UpdateDeleteAirportServlet extends HttpServlet {
             }
         }
 
-        response.sendRedirect("listAirports.jsp");
+        response.sendRedirect("./airport");
     }
 }

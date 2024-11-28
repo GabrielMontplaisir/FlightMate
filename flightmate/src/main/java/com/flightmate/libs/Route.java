@@ -6,4 +6,5 @@ public class Route {
 	public static String SETTINGS = "settings.jsp";
 	public static String SIGNUP = "signup.jsp";
 	public static String AIRPORT = "airport.jsp";
+	public static String AIRCRAFT = "aircraft.jsp";
 }
