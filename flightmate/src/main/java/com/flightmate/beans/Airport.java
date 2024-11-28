@@ -1,19 +1,23 @@
 package com.flightmate.beans;
 
+import java.time.LocalDateTime;
+
 public class Airport {
     private int airportId;
 	private String airportName, city, country;
 	private String airportCode;
 	private int runways;	
+	private LocalDateTime createdAt;
 	
 	// Constructor	
-	public Airport(int airportId, String airportName, String airportCode, String city, String country, int runways) {
+	public Airport(int airportId, String airportName, String airportCode, String city, String country, int runways, LocalDateTime createdAt) {
 		this.airportId = airportId;
 		this.airportName = airportName;
 		this.airportCode = airportCode;
 		this.city = city;
 		this.country = country;
 		this.runways = runways;
+		this.createdAt = createdAt;
 	}
 	
 	// Getter / Setter Methods
@@ -35,6 +39,9 @@ public class Airport {
 	public void setCity(String city) {
 		this.city = city;
 	}
+    public void setAirportId(int airportId) {
+        this.airportId = airportId;
+    }
 
 	public String getCountry() {
 		return country;
@@ -59,4 +66,12 @@ public class Airport {
 	public void setRunways(int runways) {
 		this.runways = runways;
 	}	
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

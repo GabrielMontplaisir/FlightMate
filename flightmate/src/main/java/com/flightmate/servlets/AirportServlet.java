@@ -1,6 +1,7 @@
 package com.flightmate.servlets;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -80,7 +81,7 @@ public class AirportServlet extends HttpServlet {
         
         
      // Create an airport object
-        Airport airport = new Airport(0, airportName, airportCode, city, country, runways);
+        Airport airport = new Airport(0, airportName, airportCode, city, country, runways, LocalDateTime.now());
         AirportDao dao = AirportDao.getDao();
         
         try {

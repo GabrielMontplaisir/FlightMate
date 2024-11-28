@@ -1,6 +1,9 @@
 package com.flightmate.servlets;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +48,7 @@ public class AircraftServlet extends HttpServlet {
         String details = req.getParameter("details");
         int airportId = Integer.parseInt(req.getParameter("airport"));
 
-        Aircraft aircraft = new Aircraft(0, model, details, airportId);
+        Aircraft aircraft = new Aircraft(0, model, LocalDate.now(), LocalDate.now(), LocalDate.now(), details, LocalDateTime.now(), airportId, airportId);
         boolean success = AircraftDao.getDao().addAircraft(aircraft);
 
         if (success) {

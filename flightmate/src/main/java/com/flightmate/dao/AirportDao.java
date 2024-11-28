@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.flightmate.beans.Airport;
+
 import com.flightmate.libs.builders.AirportBuilder;
 
 public class AirportDao {
@@ -77,42 +78,47 @@ public class AirportDao {
 	public void createAirport(Airport airport) throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO airports (airport_name, airport_code, city, country, runways) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getDBInstance();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, airport.getAirportName());
-            ps.setString(2, airport.getAirportCode());
-            ps.setString(3, airport.getCity());
-            ps.setString(4, airport.getCountry());
-            ps.setInt(5, airport.getRunways());
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+               ps.setString(1, airport.getAirportName());
+               ps.setString(2, airport.getAirportCode());
+               ps.setString(3, airport.getCity());
+               ps.setString(4, airport.getCountry());
+               ps.setInt(5, airport.getRunways());
 
-            int rowsInserted = ps.executeUpdate();
-            if (rowsInserted == 0) {
-                throw new SQLException("Failed to add airport.");
-            }
+               int rowsInserted = ps.executeUpdate();
+               if (rowsInserted == 0) {
+                   throw new SQLException("Failed to add airport.");
+               }
+        } catch (Exception e) {
+        	e.printStackTrace();
         }
-    }
-	
-	public List<Airport> getAllAirports() {
-	    List<Airport> airports = new ArrayList<>();
-	    String sql = "SELECT id, airport_name, airport_code, city, country, runways FROM airports";
-	    try (Connection conn = DBConnection.getDBInstance();
-	         PreparedStatement stmt = conn.prepareStatement(sql);
-	         ResultSet rs = stmt.executeQuery()) {
-	        while (rs.next()) {
-	            Airport airport = new Airport(
-	                rs.getInt("id"),
-	                rs.getString("airport_name"),
-	                rs.getString("airport_code"),
-	                rs.getString("city"),
-	                rs.getString("country"),
-	                rs.getInt("runways")
-	            );
-	            airports.add(airport);
-	        }
-	    } catch (SQLException | ClassNotFoundException e) {
-	        e.printStackTrace();  // Handle exceptions appropriately in production
-	    }
-	    return airports;
 	}
+    
+	   // Get All Airports
+    public static List<Airport> getAllAirports() {
+        List<Airport> airports = new ArrayList<>();
+        String sql = "SELECT * FROM Airports";
+        try (Connection conn = DBConnection.getDBInstance();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                airports.add(new AirportBuilder()
+                        .setAirportId(rs.getInt("airport_id"))
+                        .setAirportCode(rs.getString("airport_code"))
+                        .setAirportName(rs.getString("airport_name"))
+                        .setCity(rs.getString("city"))
+                        .setCountry(rs.getString("country"))
+                        .setRunways(rs.getInt("runways"))
+                        .setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime())
+                        .create());
+
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return airports;
+    }
 	
 	public void updateAirport(Airport airport) {
 	    String sql = "UPDATE airports SET airport_name = ?, airport_code = ?, city = ?, country = ?, runways = ? WHERE id = ?";
@@ -193,8 +199,8 @@ public class AirportDao {
 			if (rs != null && rs.next()) {
 				Airport = new AirportBuilder()
 						.setAirportId(airportId)
-						.setName(rs.getString(AIRPORT_NAME))
-						.setCode(rs.getString(AIRPORT_CODE))
+						.setAirportName(rs.getString(AIRPORT_NAME))
+						.setAirportCode(rs.getString(AIRPORT_CODE))
 						.setCity(rs.getString(CITY))
 						.setCountry(rs.getString(COUNTRY))
 						.setRunways(rs.getInt(RUNWAYS))
