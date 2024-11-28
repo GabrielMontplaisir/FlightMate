@@ -6,15 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.flightmate.beans.Airport;
 import com.flightmate.dao.AirportDao;
-import com.flightmate.libs.Validation;
-import com.flightmate.libs.services.SessionService;
 
 
 
@@ -53,58 +46,20 @@ public class AddAirportServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             response.getWriter().write("Error: Invalid number of runways.");
             return;
-        }
-
-        Connection conn = null;
-        PreparedStatement ps = null;
-
+        }       
+        
+        
+     // Create an airport object
+        Airport airport = new Airport(0, airportName, airportCode, city, country, runways);
+        AirportDao dao = AirportDao.getDao();
+        
         try {
-            // Database connection
-            String dbURL = "jdbc:mysql://localhost:3306/flightmate";
-            String dbUser = "root";
-            String dbPassword = "12345678"; 
-            
-             
-            
-                try {
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException("Failed to load MySQL driver", e);
-                }          
-         
-
-            
-            
-
-            conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-            // Insert data into the database
-            String sql = "INSERT INTO airports (airport_name, airport_code, city, country, runways) VALUES (?, ?, ?, ?, ?)";
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, airportName);
-            ps.setString(2, airportCode);
-            ps.setString(3, city);
-            ps.setString(4, country);
-            ps.setInt(5, runways);
-
-            int rowsInserted = ps.executeUpdate();
-
-            if (rowsInserted > 0) {
-                //response.getWriter().write("Airport added successfully!");
-            	response.sendRedirect("listAirports.jsp");
-            } else {
-                response.getWriter().write("Failed to add airport.");
-            }
+            dao.createAirport(airport);
+            response.sendRedirect("listAirports.jsp");
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().write("Error: " + e.getMessage());
-        } finally {
-            try {
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        }        
+        
     }
 }

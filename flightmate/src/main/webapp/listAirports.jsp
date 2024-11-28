@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.flightmate.beans.Airport" %>
+<%@ page import="com.flightmate.dao.AirportDao" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>    
-	<jsp:include page="./components/head.jsp" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+    <jsp:include page="./components/head.jsp" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     <title>List of Airports</title>
 </head>
 <body class="background">
@@ -19,53 +21,35 @@
             <th>City</th>
             <th>Country</th>
             <th>Runways</th>
+            <th>Actions</th>
         </tr>
         <%
-            try {
-            	 String dbURL = "jdbc:mysql://localhost:3306/flightmate";
-                 String dbUser = "root";
-                 String dbPassword = "12345678"; 
-                 
-                     try {
-                         Class.forName("com.mysql.cj.jdbc.Driver");
-                     } catch (ClassNotFoundException e) {
-                         throw new RuntimeException("Failed to load MySQL driver", e);
-                     }  
-                
-                Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-                String query = "SELECT * FROM airports";
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-
-                while (rs.next()) {
+            AirportDao dao = AirportDao.getDao();
+            List<Airport> airports = dao.getAllAirports();
+            for (Airport airport : airports) {
         %>
+        <form method="post" action="UpdateDeleteAirportServlet">
         <tr>
-            <td><%= rs.getInt("id") %></td>
-            <td><%= rs.getString("airport_name") %></td>
-            <td><%= rs.getString("airport_code") %></td>
-            <td><%= rs.getString("city") %></td>
-            <td><%= rs.getString("country") %></td>
-            <td><%= rs.getInt("runways") %></td>
+            <td><%= airport.getId() %><input type="hidden" name="id" value="<%= airport.getId() %>" /></td>
+            <td><input type="text" name="airport_name" value="<%= airport.getAirport_name() %>" /></td>
+            <td><input type="text" name="airport_code" value="<%= airport.getAirport_code() %>" /></td>
+            <td><input type="text" name="city" value="<%= airport.getCity() %>" /></td>
+            <td><input type="text" name="country" value="<%= airport.getCountry() %>" /></td>
+            <td><input type="number" name="runways" value="<%= airport.getRunways() %>" /></td>
+            <td>
+                <input type="submit" name="action" value="Update" />
+                <input type="submit" name="action" value="Delete" onclick="return confirm('Are you sure you want to delete this airport?')" />
+            </td>
         </tr>
-        <%
-                }
-                rs.close();
-                stmt.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-        %>
-        <tr>
-            <td colspan="6">Error retrieving airport data.</td>
-        </tr>
+        </form>
         <%
             }
         %>
     </table>
     </main>
     <footer class="center">
-		<p>Created by Biqi, Dennis, Emily, Gabriel &amp; Jianxiang</p>
-		<p>for CST8319 -- Algonquin College (2024)</p>
-	</footer>
+        <p>Created by Biqi, Dennis, Emily, Gabriel &amp; Jianxiang</p>
+        <p>for CST8319 -- Algonquin College (2024)</p>
+    </footer>
 </body>
 </html>
