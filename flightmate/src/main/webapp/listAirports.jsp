@@ -3,8 +3,7 @@
 <%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    
+<head>    
 	<jsp:include page="./components/head.jsp" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     <title>List of Airports</title>
