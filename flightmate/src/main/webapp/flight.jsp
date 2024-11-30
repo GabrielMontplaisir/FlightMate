@@ -12,7 +12,7 @@
 	<main>
 	 <!-- Flight Management Section -->
 	    <h2>Flight Management</h2>
-	    <table class="dashboard_table w-full border-2 rounded">
+	    <table class="dashboard-table w-full border-2 rounded">
 	        <thead>
 	            <tr>
 	                <th>Flight ID</th>

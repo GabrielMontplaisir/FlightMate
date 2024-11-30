@@ -48,8 +48,8 @@
                             <td>${user.role}</td>
                             <td>
                                 <div class=" flex">
-                                    <a href="admin-dashboard?action=edit&id=${user.userId}" class="btn">Edit</a>
-                                    <a href="admin-dashboard?action=delete&id=${user.userId}" class="btn error"
+                                    <a href="dashboard?action=edit&id=${user.userId}" class="btn">Edit</a>
+                                    <a href="dashboard?action=delete&id=${user.userId}" class="btn error"
                                         onclick="return confirm('Are you sure you want to delete this user?');">
                                         Delete
                                     </a>

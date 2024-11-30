@@ -12,8 +12,8 @@
 <body class="background">
     <jsp:include page='./components/header.jsp' />
 
-    <main>
-        <section class="container">
+   <main>
+        <div class="container mx-auto mt-8 w-72 rounded border-1 bg-white">
             <h1 class="center">Add New Aircraft</h1>
             
             <c:if test="${not empty success}">
@@ -23,34 +23,55 @@
                 <div class="alert error center">${error}</div>
             </c:if>
             
-            <form action="aircraft" method="post" class="my-2">
+            <form action="${pageContext.request.contextPath}/aircraft" method="post" class="my-2">
                 <div class="form-group space-evenly">
-                    <label for="model" class="form-label">Aircraft Model:</label>
-                    <input type="text" id="model" name="model" class="form-input flex-2 border-2 rounded" required>
+                    <label for="aircraftModel" class="form-label">Aircraft Model:</label>
+                    <input type="text" id="aircraftModel" name="aircraftModel" class="form-input flex-2 border-2 rounded" required>
                 </div>
 
-                <div class="form-group space-evenly ">
-                    <label for="airport" class="form-label">Assign to Airport:</label>
-                    <select id="airport" name="airport" class="form-input border-2 rounded">
-                        <c:forEach var="airport" items="${airports}">
-                            <option value="${airport.getAirportId()}">${airport.getAirportName()}</option>
+                <div class="form-group space-evenly">
+                    <label for="manufactureDate" class="form-label">Manufacture Date:</label>
+                    <input type="date" id="manufactureDate" name="manufactureDate" class="form-input flex-2 border-2 rounded" required>
+                </div>
+
+                <div class="form-group space-evenly">
+                    <label for="lastMaintenanceDate" class="form-label">Last Maintenance Date:</label>
+                    <input type="date" id="lastMaintenanceDate" name="lastMaintenanceDate" class="form-input flex-2 border-2 rounded" required>
+                </div>
+
+                <div class="form-group space-evenly">
+                    <label for="nextMaintenanceDate" class="form-label">Next Maintenance Date:</label>
+                    <input type="date" id="nextMaintenanceDate" name="nextMaintenanceDate" class="form-input flex-2 border-2 rounded" required>
+                </div>
+
+                <div class="form-group space-evenly">
+                    <label for="aircraftNotes" class="form-label">Aircraft Notes:</label>
+                    <textarea id="aircraftNotes" name="aircraftNotes" class="form-input flex-2 border-2 rounded"></textarea>
+                </div>
+
+                <div class="form-group space-evenly">
+                    <label for="administratorId" class="form-label">Administrator:</label>
+                    <select id="administratorId" name="administratorId" class="form-input border-2 rounded" required>
+                        <c:forEach var="admin" items="${administrators}">
+                            <option value="${admin.getUserId()}">${admin.getFirstName()} ${admin.getLastName()}</option>
                         </c:forEach>
                     </select>
-                    <!-- Button to Add Airport -->
-                    <a href="${pageContext.request.contextPath}/airport" class="btn ml-2">Add Airport</a>
                 </div>
 
                 <div class="form-group space-evenly">
-                    <label for="details" class="form-label">Aircraft Details:</label>
-                    <textarea id="details" name="details" class="form-input flex-2 border-2 rounded"></textarea>
+                    <label for="airportId" class="form-label">Airport:</label>
+                    <select id="airportId" name="airportId" class="form-input border-2 rounded" required>
+                        <c:forEach var="airport" items="${airports}">                            
+                        <option value="${airport.getAirportId()}">${airport.getAirportName()}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
                 <div class="center my-2">
                     <button type="submit" class="btn success">Submit</button>
                 </div>
             </form>
-            
-        </section>
+        </div>
     </main>
 </body>
 </html>

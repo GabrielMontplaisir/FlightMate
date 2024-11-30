@@ -29,8 +29,7 @@ public class AirportServlet extends HttpServlet {
 			return;
 		}
 		
-		AirportDao dao = AirportDao.getDao();
-        List<Airport> airports = dao.getAllAirports();
+        List<Airport> airports = AirportDao.getDao().getAllAirports();
         
         req.setAttribute("airports", airports);
 		

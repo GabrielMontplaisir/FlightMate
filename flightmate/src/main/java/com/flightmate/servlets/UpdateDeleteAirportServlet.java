@@ -1,7 +1,6 @@
 package com.flightmate.servlets;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,9 +30,8 @@ public class UpdateDeleteAirportServlet extends HttpServlet {
             String city = request.getParameter("city");
             String country = request.getParameter("country");
             int runways = Integer.parseInt(request.getParameter("runways"));
-            LocalDateTime createdAt = LocalDateTime.parse(request.getParameter("createdAt"));
 
-            Airport airport = new Airport(id, name, code, city, country, runways, createdAt);
+            Airport airport = new Airport(id, name, code, city, country, runways, null);
             try {
                 dao.updateAirport(airport);
             } catch (Exception e) {

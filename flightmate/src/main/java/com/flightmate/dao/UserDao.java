@@ -298,6 +298,28 @@ public class UserDao {
 	    }
 	    return deleted;
 	}
+	
+    public List<User> getAllAdministrators() {
+        //Fetching users with ADMINISTRATOR role
+        List<User> administrators = new ArrayList<>();
+        String sql = "SELECT user_id, first_name, last_name, email_address, role_id FROM Users WHERE role_id = 2";
+        try (Connection conn = DBConnection.getDBInstance();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                administrators.add(new User(
+                    rs.getInt(USER_ID),
+                    rs.getString(EMAIL_ADDRESS),
+                    rs.getString(FIRST_NAME),
+                    rs.getString(LAST_NAME),
+                    rs.getInt(ROLE_ID) 
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return administrators;
+    }
 
 
 	

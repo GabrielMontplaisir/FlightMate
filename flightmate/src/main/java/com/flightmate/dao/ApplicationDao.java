@@ -143,7 +143,7 @@ public class ApplicationDao {
                         + "airport_code VARCHAR(3) NOT NULL UNIQUE, "
                         + "city VARCHAR(255) NOT NULL, "
                         + "country VARCHAR(255) NOT NULL, "
-                        + "runways INT NOT NULL), "
+                        + "runways INT NOT NULL, "
                         + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());";              
                         
                 stmt.executeUpdate(sql);
@@ -175,7 +175,7 @@ public class ApplicationDao {
                         + "administrator_id INT NOT NULL, "
                         + "airport_id INT NOT NULL, "
                         + "FOREIGN KEY (administrator_id) REFERENCES " + USERS_TABLE + "(user_id), "
-                        + "FOREIGN KEY (airport_id) REFERENCES " + AIRPORTS_TABLE + "(airport_id));";
+                        + "FOREIGN KEY (airport_id) REFERENCES " + AIRPORTS_TABLE + "(id));";
                 stmt.executeUpdate(sql);
                 System.out.println("Created Aircrafts Table");
             }

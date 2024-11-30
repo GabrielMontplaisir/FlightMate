@@ -103,7 +103,7 @@ public class AirportDao {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 airports.add(new AirportBuilder()
-                        .setAirportId(rs.getInt("airport_id"))
+                        .setAirportId(rs.getInt("id"))
                         .setAirportCode(rs.getString("airport_code"))
                         .setAirportName(rs.getString("airport_name"))
                         .setCity(rs.getString("city"))

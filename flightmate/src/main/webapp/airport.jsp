@@ -47,20 +47,20 @@
             <th>Actions</th>
         </tr>
         <c:forEach var="airport" items="${airports}">	
-	        <form method="post" action="UpdateDeleteAirportServlet">
 	        <tr>
-	            <td>${airport.getAirportId()}<input type="hidden" name="id" value="${airport.getAirportId()}" /></td>
-	            <td><input type="text" name="airport_name" value="${airport.getAirportName()}" /></td>
-	            <td><input type="text" name="airport_code" value="${airport.getAirportCode()}" /></td>
-	            <td><input type="text" name="city" value="${airport.getCity()}" /></td>
-	            <td><input type="text" name="country" value="${airport.getCountry()}" /></td>
-	            <td><input type="number" name="runways" value="${airport.getRunways()}" /></td>
-	            <td>
-	                <input type="submit" name="action" value="Update" />
-	                <input type="submit" name="action" value="Delete" onclick="return confirm('Are you sure you want to delete this airport?')" />
-	            </td>
+		        <form method="post" action="UpdateDeleteAirportServlet">
+		            <td>${airport.getAirportId()}<input type="hidden" name="id" value="${airport.getAirportId()}" /></td>
+		            <td><input type="text" name="airport_name" value="${airport.getAirportName()}" /></td>
+		            <td><input type="text" name="airport_code" value="${airport.getAirportCode()}" /></td>
+		            <td><input type="text" name="city" value="${airport.getCity()}" /></td>
+		            <td><input type="text" name="country" value="${airport.getCountry()}" /></td>
+		            <td><input type="number" name="runways" value="${airport.getRunways()}" /></td>
+		            <td>
+		                <input type="submit" name="action" value="Update" />
+		                <input type="submit" name="action" value="Delete" onclick="return confirm('Are you sure you want to delete this airport?')" />
+		            </td>
+		        </form>
 	        </tr>
-	        </form>
         </c:forEach>
     </table>
     </main>

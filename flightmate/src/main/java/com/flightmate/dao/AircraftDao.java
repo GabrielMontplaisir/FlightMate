@@ -36,27 +36,6 @@ public class AircraftDao {
             return false;
         }
     }
-    public static List<User> getAllAdministrators() {
-        //Fetching users with ADMINISTRATOR role
-        List<User> administrators = new ArrayList<>();
-        String sql = "SELECT user_id, first_name, last_name, email, role_id FROM Users WHERE role_id = 2";
-        try (Connection conn = DBConnection.getDBInstance();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                administrators.add(new User(
-                    rs.getInt("user_id"),
-                    rs.getString("email"),
-                    rs.getString("first_name"),
-                    rs.getString("last_name"),
-                    rs.getInt("role_id") 
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return administrators;
-    }
 
  
 }
