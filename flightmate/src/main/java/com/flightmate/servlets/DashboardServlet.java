@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.flightmate.beans.FlightHour;
 import com.flightmate.beans.User;
 import com.flightmate.dao.PilotHoursDao;
+import com.flightmate.dao.FlightDao;
 import com.flightmate.dao.UserDao;
 import com.flightmate.libs.Role;
 import com.flightmate.libs.Route;
 import com.flightmate.libs.services.SessionService;
-import com.flightmate.beans.FlightHour;
 
 
 @WebServlet("/dashboard")
@@ -63,26 +63,31 @@ public class DashboardServlet extends HttpServlet {
                 e.printStackTrace();
                 req.setAttribute("error", "Failed to retrieve pending flight hours.");
             }
+        
+		req.setAttribute("users", UserDao.getDao().getAllUsers()); 
+        req.setAttribute("flights", FlightDao.getDao().getAllFlights());
+						
         }
-
-        req.getRequestDispatcher(Route.DASHBOARD).forward(req, resp);
+        
+		req.getRequestDispatcher(Route.DASHBOARD).forward(req, resp);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = SessionService.srv.getSessionUser(req);
-
-        if (user == null) {
-            resp.sendRedirect(Route.LOGIN);
-            return;
-        }
-
-        String action = req.getParameter("action");
-        if ("save".equals(action)) {
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		User user = SessionService.srv.getSessionUser(req);
+		
+		if (user == null) {
+			resp.sendRedirect(Route.LOGIN);
+			return;
+		}
+		
+		String action = req.getParameter("action");
+		if ("save".equals(action)) {
             handleSave(req, resp);
+            
         }
 
-        doGet(req, resp);
+		 doGet(req, resp);
     }
 
     private void handleEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
