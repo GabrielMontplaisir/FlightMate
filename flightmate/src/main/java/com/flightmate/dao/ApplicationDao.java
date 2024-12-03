@@ -100,6 +100,23 @@ public class ApplicationDao {
         }
     }
     
+    public void createPilotHoursTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS pilot_hours ("
+                   + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                   + "pilot_id INT NOT NULL, "
+                   + "flight_date DATE NOT NULL, "
+                   + "hours_flighted DECIMAL(5,2) NOT NULL, "
+                   + "notes TEXT, "
+                   + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+                   + "FOREIGN KEY (pilot_id) REFERENCES users(user_id));";
+        try (Connection conn = DBConnection.getDBInstance();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            System.out.println("Created Pilot Hours Table");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void createUserTable() {
         try (
@@ -200,5 +217,31 @@ public class ApplicationDao {
         return conn.getMetaData().getTables(DB_NAME, null, tableName, new String[] {"TABLE"}).next();
     }    
     
+    public void insertSampleAirports() throws SQLException, ClassNotFoundException {
+        String sql = "INSERT INTO " + AIRPORTS_TABLE + " (airport_code, airport_name, city, country) VALUES "
+                + "('JFK', 'John F. Kennedy International Airport', 'New York', 'USA'), "
+                + "('LHR', 'Heathrow Airport', 'London', 'UK'), "
+                + "('DXB', 'Dubai International Airport', 'Dubai', 'UAE');";
+        try (
+                Connection conn = DBConnection.getDBInstance();
+                Statement stmt = conn.createStatement();
+        ) {
+            stmt.executeUpdate(sql);
+            System.out.println("Sample airports inserted.");
+        }
+    }
 
+    public void insertSampleAircrafts() throws SQLException, ClassNotFoundException {
+        String sql = "INSERT INTO " + AIRCRAFT_TABLE + " (aircraft_model, manufacture_date, last_maintenance_date, "
+                + "next_maintenance_date, aircraft_notes, administrator_id, airport_id) VALUES "
+                + "('Boeing 747', '2000-01-01', '2024-01-01', '2025-01-01', 'Flagship aircraft.', 2, 1), "
+                + "('Airbus A380', '2010-01-01', '2023-06-15', '2024-06-15', 'Double-decker aircraft.', 2, 2);";
+        try (
+                Connection conn = DBConnection.getDBInstance();
+                Statement stmt = conn.createStatement();
+        ) {
+            stmt.executeUpdate(sql);
+            System.out.println("Sample aircrafts inserted.");
+        }
+    }
 }

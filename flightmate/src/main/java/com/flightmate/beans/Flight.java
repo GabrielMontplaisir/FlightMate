@@ -11,6 +11,7 @@ public class Flight {
     private LocalDateTime departureTime; 
     private LocalDateTime arrivalTime;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     // Full constructor for FlightBuilder
     public Flight(int flightId, String flightNumber, String origin, String destination, String status,
@@ -92,5 +93,12 @@ public class Flight {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-}
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}

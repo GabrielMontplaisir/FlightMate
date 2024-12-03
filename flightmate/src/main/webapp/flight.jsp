@@ -10,19 +10,8 @@
 <body class="background">
     <jsp:include page='./components/header.jsp' />
     <main>
-        <header class="mb-2">
-            <ul class="main-header">
-                <li><a href="dashboard" class="btn">Dashboard</a></li>
-                <li><a href="airport" class="btn">Manage Airports</a></li>
-                <li><a href="aircraft" class="btn">Manage Aircraft</a></li>
-                <li><a href="feedback" class="btn">View Feedback</a></li>
-            </ul>
-        </header>
-
         <section class="container mt-2">
             <h1 class="subtitle">Flight Management</h1>
-            <p>Hello ${user.getFirstName()}</p>
-            <p>Your role: ${user.getRole()}</p>
 
             <!-- Button to create a new flight -->
             <c:if test="${user.getRole().toString() == 'ADMINISTRATOR'}">
@@ -31,7 +20,6 @@
         </section>
 
  
-
         <!-- Flights Table Section -->
         <section class="container mt-2">
             <h2 class="section-title">All Flights</h2>
@@ -69,7 +57,7 @@
                 </c:forEach>
                 </tbody>
             </table>
-
+		</section>
     </main>
 </body>
 </html>

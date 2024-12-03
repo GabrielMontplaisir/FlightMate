@@ -2,9 +2,7 @@ package com.flightmate.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,11 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.flightmate.beans.FlightHour;
 import com.flightmate.beans.User;
+import com.flightmate.dao.PilotHoursDao;
+import com.flightmate.dao.FlightDao;
 import com.flightmate.dao.UserDao;
 import com.flightmate.libs.Role;
 import com.flightmate.libs.Route;
 import com.flightmate.libs.services.SessionService;
+
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
@@ -25,11 +27,10 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    User user = SessionService.srv.getSessionUser(req);
 
-	    if (user == null || user.getRole() == null) {
-	        System.out.println("User or Role is null: " + user);
-	        resp.sendRedirect(Route.LOGIN);
-	        return; // Ensure no further actions are taken
-	    }
+        if (user == null) {
+            resp.sendRedirect(Route.LOGIN);
+            return;
+        }
 
 	    try {
 	        List<User> userList = UserDao.getDao().getAllUsers();
@@ -60,10 +61,22 @@ public class DashboardServlet extends HttpServlet {
 	            req.setAttribute("error", "Error processing action: " + e.getMessage());
 	        }
 	    }
+	    
+	    if (user.getRole().equals(Role.ADMINISTRATOR)) {
+            try {
+                List<FlightHour> pendingHours = PilotHoursDao.getDao().getPendingFlightHours();
+                req.setAttribute("pendingFlightHours", pendingHours);
+            } catch (Exception e) {
+                e.printStackTrace();
+                req.setAttribute("error", "Failed to retrieve pending flight hours.");
+            }
+	    }
+	    
+	    req.setAttribute("flights", FlightDao.getDao().getAllFlights());
 
 	    req.getRequestDispatcher(Route.DASHBOARD).forward(req, resp);
 	}
-
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    User user = SessionService.srv.getSessionUser(req);
@@ -82,8 +95,7 @@ public class DashboardServlet extends HttpServlet {
 	    doGet(req, resp); // Delegate to doGet for any other actions
 	}
 
-	
-	private void handleEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handleEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userIdParam = req.getParameter("id");
         if (userIdParam == null || userIdParam.isEmpty()) {
             req.setAttribute("error", "User ID is required for editing.");
@@ -120,20 +132,17 @@ public class DashboardServlet extends HttpServlet {
 	        boolean deleted = UserDao.getDao().deleteUser(userId);
 
 	        if (deleted) {
-	            req.getSession().setAttribute("success", "User deleted successfully.");
+	            req.setAttribute("success", "User deleted successfully.");
 	        } else {
-	            req.getSession().setAttribute("error", "Failed to delete user.");
+	            req.setAttribute("error", "Failed to delete user.");
 	        }
 	    } catch (NumberFormatException e) {
-	        req.getSession().setAttribute("error", "Invalid User ID format.");
+	        req.setAttribute("error", "Invalid User ID format.");
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        req.getSession().setAttribute("error", "Unexpected error: " + e.getMessage());
+	        req.setAttribute("error", "Unexpected error: " + e.getMessage());
 	    }
-
-	    // Redirect to dashboard to refresh the page
-	    resp.sendRedirect(req.getContextPath() + "/dashboard");
-	}
+    }
 
 	private void handleSave(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    String userIdParam = req.getParameter("user_id");
@@ -186,6 +195,4 @@ public class DashboardServlet extends HttpServlet {
 	    // Redirect back to the dashboard page
 	    resp.sendRedirect(req.getContextPath() + "/dashboard");
 	}
-
-
-    }
+}
