@@ -65,10 +65,9 @@ public class DashboardServlet extends HttpServlet {
             }
         
 		req.setAttribute("users", UserDao.getDao().getAllUsers()); 
-        req.setAttribute("flights", FlightDao.getDao().getAllFlights());
 						
         }
-        
+        	req.setAttribute("flights", FlightDao.getDao().getAllFlights());
 		req.getRequestDispatcher(Route.DASHBOARD).forward(req, resp);
     }
 	
