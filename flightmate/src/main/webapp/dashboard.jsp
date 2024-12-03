@@ -32,12 +32,13 @@
 			<p>Your role: ${user.getRole()}</p>
             <c:if test="${user.getRole().equals(roles['PILOT'])}">
                 <div id="aa">&nbsp;</div>
-                <div class="container">
+                <div>
+                	<h2 class="section-title">Flight Statistics</h2>
                     <div id="flightPieChart" style="width:50%; height: 400px;float:left"></div>
                     <div id="airportChart" style="width:50%; height: 400px;float:right"></div>
                 </div>
                 <div class="flightTableData">
-                    <h2>Flight</h2>
+                    <h2>Flights</h2>
                     <table class="dashboard-table w-full border-2 rounded">
                         <thead>
                         <tr>
@@ -67,7 +68,7 @@
 		</section>
 
         <%-- Only display the form for pilots --%>
-        <c:if test="${sessionScope.user.role == 'PILOT'}">
+        <c:if test="${user.getRole().equals(roles['PILOT'])}">
             <h2>Log Flight Hours</h2>
             <form action="logFlightHours" method="post">
                 <label for="flight_date">Flight Date:</label>
@@ -80,7 +81,7 @@
             </form>
         </c:if>
 
-        <c:if test="${sessionScope.user.role == 'ADMINISTRATOR'}">
+        <c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
             <h2>Pending Flight Hour Approvals</h2>
             <table>
                 <thead>
@@ -113,7 +114,7 @@
         </c:if>
 
 		<c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
-			<h2>User Management</h2>
+			<h2 class="section-title">User Management</h2>
             <table class="dashboard-table w-full border-2 rounded">
                 <thead>
                     <tr>

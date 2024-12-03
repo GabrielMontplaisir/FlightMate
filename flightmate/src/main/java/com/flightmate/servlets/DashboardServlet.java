@@ -1,7 +1,6 @@
 package com.flightmate.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,13 +34,9 @@ public class DashboardServlet extends HttpServlet {
 	    try {
 	        List<User> userList = UserDao.getDao().getAllUsers();
 	        req.setAttribute("users", userList);
-	        System.out.println("User list fetched successfully: " + userList);
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        req.setAttribute("error", "Failed to fetch user list: " + e.getMessage());
 	    }
-
-	    req.setAttribute("roles", new ArrayList<>(List.of(Role.values())));
 
 	    String action = req.getParameter("action");
 	    if (action != null && user.getRole().equals(Role.ADMINISTRATOR)) {

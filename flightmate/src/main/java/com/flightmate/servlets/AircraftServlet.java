@@ -36,7 +36,7 @@ public class AircraftServlet extends HttpServlet {
         } 
         
         List<User> administrators = UserDao.getDao().getAllAdministrators();
-        List<Airport> airports = AirportDao.getAllAirports();
+        List<Airport> airports = AirportDao.getDao().getAllAirports();
 
         req.setAttribute("administrators", administrators);
         req.setAttribute("airports", airports);

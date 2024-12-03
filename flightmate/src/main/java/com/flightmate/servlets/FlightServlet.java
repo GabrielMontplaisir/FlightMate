@@ -6,7 +6,6 @@ import com.flightmate.beans.User;
 import com.flightmate.dao.AirportDao;
 import com.flightmate.dao.FlightDao;
 import com.flightmate.dao.UserDao;
-import com.flightmate.libs.Role;
 import com.flightmate.libs.Route;
 import com.flightmate.libs.builders.FlightBuilder;
 import com.flightmate.libs.services.SessionService;
@@ -28,13 +27,13 @@ public class FlightServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = SessionService.srv.getSessionUser(req);
 
-        if (user == null || user.getRole() != Role.ADMINISTRATOR) {
+        if (user == null) {
             resp.sendRedirect(Route.LOGIN);
             return;
         }
 
         // Fetch necessary data for the form
-        List<Airport> airports = AirportDao.getAllAirports();
+        List<Airport> airports = AirportDao.getDao().getAllAirports();
         List<User> pilots = UserDao.getDao().getAllPilots(); // Fetch only users with role 'PILOT'
 
         req.setAttribute("airports", airports);
@@ -54,14 +53,14 @@ public class FlightServlet extends HttpServlet {
         }
 
         // Proceed to render the form
-        req.getRequestDispatcher(Route.ADD_FLIGHT).forward(req, resp);
+        req.getRequestDispatcher(Route.FLIGHT).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = SessionService.srv.getSessionUser(req);
 
-        if (user == null || user.getRole() != Role.ADMINISTRATOR) {
+        if (user == null) {
             resp.sendRedirect(Route.LOGIN);
             return;
         }
@@ -118,12 +117,12 @@ public class FlightServlet extends HttpServlet {
 
             // Store success message in session and redirect
             req.getSession().setAttribute("success", "Flight added successfully!");
-            resp.sendRedirect(Route.ADD_FLIGHT);  // Redirect to another page, such as flight list
+            resp.sendRedirect(Route.FLIGHT);  // Redirect to another page, such as flight list
 
         } catch (Exception e) {
             e.printStackTrace();
             req.getSession().setAttribute("error", "Failed to add flight: " + e.getMessage());
-            resp.sendRedirect(Route.ADD_FLIGHT);  // Redirect to handle errors too
+            resp.sendRedirect(Route.FLIGHT);  // Redirect to handle errors too
         }
     }
 }
