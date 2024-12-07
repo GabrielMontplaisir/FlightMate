@@ -90,7 +90,7 @@ public class FeedbackDao {
 	
 	public List<Feedback> getAllFeedback() {
 		List<Feedback> feedbackList = new ArrayList<>();
-		String sql = "SELECT * FROM "+ApplicationDao.FEEDBACK_TABLE+" INNER JOIN "+ ApplicationDao.USERS_TABLE +" ON "+ApplicationDao.FEEDBACK_TABLE+"."+UserDao.USER_ID+" = "+ApplicationDao.USERS_TABLE+"."+UserDao.USER_ID+" ORDER BY "+ApplicationDao.FEEDBACK_TABLE+"."+FEEDBACK_DATE+" DESC;";
+		String sql = "SELECT * FROM "+ApplicationDao.FEEDBACK_TABLE+" INNER JOIN "+ ApplicationDao.USERS_TABLE +" ON "+ApplicationDao.FEEDBACK_TABLE+"."+UserDao.USER_ID+" = "+ApplicationDao.USERS_TABLE+"."+UserDao.USER_ID+" ORDER BY "+ApplicationDao.FEEDBACK_TABLE+"."+FEEDBACK_DATE+" DESC, "+ApplicationDao.FEEDBACK_TABLE+"."+FEEDBACK_HAS_READ+" ASC;";
 		try (
 				Connection conn = DBConnection.getDBInstance();
 				PreparedStatement stmt = conn.prepareStatement(sql);
