@@ -35,12 +35,40 @@ public class AircraftServlet extends HttpServlet {
             return;
         } 
         
+        if (airportId != null && !airportId.isEmpty()) {
+            handleAircraftDetailsRequest(Integer.parseInt(airportId), resp);
+            return;
+        }
+        
         List<User> administrators = UserDao.getDao().getAllAdministrators();
         List<Airport> airports = AirportDao.getDao().getAllAirports();
 
         req.setAttribute("administrators", administrators);
         req.setAttribute("airports", airports);
         req.getRequestDispatcher(Route.AIRCRAFT).forward(req, resp);
+    }
+    
+    private void handleAircraftDetailsRequest(int airportId, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        List<Aircraft> aircraftList = AircraftDao.getDao().getAircraftByAirportId(airportId);
+        StringBuilder htmlResponse = new StringBuilder();
+
+        if (aircraftList.isEmpty()) {
+            htmlResponse.append("<p>No aircraft found for this airport.</p>");
+        } else {
+            htmlResponse.append("<table><tr><th>Model</th><th>Manufacture Date</th><th>Last Maintenance</th><th>Next Maintenance</th></tr>");
+            for (Aircraft aircraft : aircraftList) {
+                htmlResponse.append("<tr>")
+                        .append("<td>").append(aircraft.getAircraftModel()).append("</td>")
+                        .append("<td>").append(aircraft.getManufactureDate()).append("</td>")
+                        .append("<td>").append(aircraft.getLastMaintenanceDate()).append("</td>")
+                        .append("<td>").append(aircraft.getNextMaintenanceDate()).append("</td>")
+                        .append("</tr>");
+            }
+            htmlResponse.append("</table>");
+        }
+
+        resp.getWriter().write(htmlResponse.toString());
     }
 
     @Override
