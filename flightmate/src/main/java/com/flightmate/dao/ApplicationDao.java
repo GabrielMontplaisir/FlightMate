@@ -15,7 +15,8 @@ public class ApplicationDao {
     public static final String FLIGHTS_TABLE = "flights";
     public static final String PILOT_HOURS_TABLE = "pilot_hours";
     public static final String FEEDBACK_TABLE = "feedback";
-    
+    public static final String PLAN_TABLE = "plan";
+
     private ApplicationDao() {}
 
     public static synchronized ApplicationDao getDao() {
@@ -28,7 +29,7 @@ public class ApplicationDao {
                 Connection conn = DBConnection.getDBInstance();
                 ResultSet resultSet = conn.getMetaData().getCatalogs();
                 Statement stmt = conn.createStatement();
-            ) {
+        ) {
             if (!dbExists(DB_NAME, resultSet)) {
                 System.out.print("Creating DB...");
                 String sql = "CREATE DATABASE IF NOT EXISTS "+ DB_NAME +" DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
@@ -43,12 +44,12 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
+
     public void createRolesTable() {
         try (
                 Connection conn = DBConnection.getDBInstance();
                 Statement stmt = conn.createStatement();
-            ) {
+        ) {
             if (!tableExists(conn, ROLES_TABLE)) {
                 System.out.print("Creating Roles Table...");
                 String sql = "CREATE TABLE IF NOT EXISTS "+ ROLES_TABLE +" ("
@@ -56,13 +57,13 @@ public class ApplicationDao {
                         + "role_name VARCHAR(25) NOT NULL, "
                         + "role_description VARCHAR(240) NOT NULL);";
                 stmt.executeUpdate(sql);
-                
+
                 sql = "INSERT INTO " + ROLES_TABLE + "(role_name, role_description) VALUES "
-                		+ "('PILOT', 'Default user. Can log flight hours and schedule own flights.'),"
-                		+ "('ADMINISTRATOR', 'Can approve/reject flight hours, manage aircrafts and airports.')";
-                
+                        + "('PILOT', 'Default user. Can log flight hours and schedule own flights.'),"
+                        + "('ADMINISTRATOR', 'Can approve/reject flight hours, manage aircrafts and airports.')";
+
                 stmt.executeUpdate(sql);
-                
+
                 System.out.println("Created Roles Table");
             }
 
@@ -72,12 +73,12 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
+
     public void createFlightsTable() {
         try (
                 Connection conn = DBConnection.getDBInstance();
                 Statement stmt = conn.createStatement();
-            ) {
+        ) {
             if (!tableExists(conn, FLIGHTS_TABLE)) {
                 System.out.print("Creating Flights Table...");
                 String sql = "CREATE TABLE IF NOT EXISTS " + FLIGHTS_TABLE + " ("
@@ -101,26 +102,26 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
+
     public void createPilotHoursTable() {
-    	 try (
-                 Connection conn = DBConnection.getDBInstance();
-                 Statement stmt = conn.createStatement();
-             ) {
-             if (!tableExists(conn, PILOT_HOURS_TABLE)) {
-            	 System.out.print("Creating Pilot_Hours Table...");
-            	 String sql = "CREATE TABLE IF NOT EXISTS "+ PILOT_HOURS_TABLE +" ("
-                         + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                         + "pilot_id INT NOT NULL, "
-                         + "flight_date DATE NOT NULL, "
-                         + "hours_flighted DECIMAL(5,2) NOT NULL, "
-                         + "notes TEXT, "
-                         + "approval_status VARCHAR(15) DEFAULT 'PENDING', "
-                         + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-                         + "FOREIGN KEY (pilot_id) REFERENCES users(user_id));";
-            	 stmt.executeUpdate(sql);
-            	 System.out.println("Created Pilot Hours Table");
-             }
+        try (
+                Connection conn = DBConnection.getDBInstance();
+                Statement stmt = conn.createStatement();
+        ) {
+            if (!tableExists(conn, PILOT_HOURS_TABLE)) {
+                System.out.print("Creating Pilot_Hours Table...");
+                String sql = "CREATE TABLE IF NOT EXISTS "+ PILOT_HOURS_TABLE +" ("
+                        + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                        + "pilot_id INT NOT NULL, "
+                        + "flight_date DATE NOT NULL, "
+                        + "hours_flighted DECIMAL(5,2) NOT NULL, "
+                        + "notes TEXT, "
+                        + "approval_status VARCHAR(15) DEFAULT 'PENDING', "
+                        + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+                        + "FOREIGN KEY (pilot_id) REFERENCES users(user_id));";
+                stmt.executeUpdate(sql);
+                System.out.println("Created Pilot Hours Table");
+            }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -130,7 +131,7 @@ public class ApplicationDao {
         try (
                 Connection conn = DBConnection.getDBInstance();
                 Statement stmt = conn.createStatement();
-            ) {
+        ) {
             if (!tableExists(conn, USERS_TABLE)) {
                 System.out.print("Creating User Table...");
                 String sql = "CREATE TABLE IF NOT EXISTS "+ USERS_TABLE +" ("
@@ -154,12 +155,12 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
+
     public void createAirportTable() {
         try (
                 Connection conn = DBConnection.getDBInstance();
                 Statement stmt = conn.createStatement();
-            ) {
+        ) {
             if (!tableExists(conn, AIRPORTS_TABLE)) {
                 System.out.print("Creating Airport Table...");
                 String sql = "CREATE TABLE IF NOT EXISTS "+ AIRPORTS_TABLE +" ("
@@ -169,8 +170,8 @@ public class ApplicationDao {
                         + "city VARCHAR(255) NOT NULL, "
                         + "country VARCHAR(255) NOT NULL, "
                         + "runways INT NOT NULL, "
-                        + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());";              
-                        
+                        + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());";
+
                 stmt.executeUpdate(sql);
                 System.out.println("Created airports Table");
             }
@@ -211,7 +212,7 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
+
     public void createFeedbackTable() {
         try (
                 Connection conn = DBConnection.getDBInstance();
@@ -237,9 +238,38 @@ public class ApplicationDao {
             e.printStackTrace();
         }
     }
-    
-    
- 
+
+
+    public void createPlanTable() {
+        try (
+                Connection conn = DBConnection.getDBInstance();
+                Statement stmt = conn.createStatement();
+        ) {
+            if (!tableExists(conn, PLAN_TABLE)) {
+                System.out.print("Creating Plan Table...");
+                String sql = "CREATE TABLE IF NOT EXISTS " + PLAN_TABLE + " ("
+                        + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                        + "aircraft_model VARCHAR(50) NULL DEFAULT NULL, "
+                        + "departure_datetime datetime NULL DEFAULT NULL, "
+                        + "departure_airport_code VARCHAR(50) NULL DEFAULT NULL, "
+                        + "arrival_datetime datetime NULL DEFAULT NULL, "
+                        + "planned_flight_duration double NULL DEFAULT NULL, "
+                        + "actual_flight_duration double NULL DEFAULT NULL, "
+                        + "status varchar(10) NULL DEFAULT NULL, "
+                        + "arrival_airport_code varchar(10) NULL NOT NULL);";
+                stmt.executeUpdate(sql);
+                System.out.println("Created Feedback Table");
+            }
+
+        } catch (SQLException e) {
+            DBUtil.processException(e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     private static boolean dbExists(String dbName, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             if (resultSet.getString(1).equals(dbName)) return true;
@@ -249,8 +279,8 @@ public class ApplicationDao {
 
     public boolean tableExists(Connection conn, String tableName) throws SQLException {
         return conn.getMetaData().getTables(DB_NAME, null, tableName, new String[] {"TABLE"}).next();
-    }    
-    
+    }
+
     public void insertSampleAirports() throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO " + AIRPORTS_TABLE + " (airport_code, airport_name, city, country) VALUES "
                 + "('JFK', 'John F. Kennedy International Airport', 'New York', 'USA'), "
