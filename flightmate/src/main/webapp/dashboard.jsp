@@ -12,73 +12,72 @@
 	<title>FlightMate | Dashboard</title>
 </head>
 <body class="background">
-<jsp:include page='./components/header.jsp' />
-<main>
-	<header class="mb-2">
-		<h1 class="subtitle">Dashboard</h1>
-		<ul class="main-header">
-			<li><a href="airport" class="btn">See Airports</a></li>
-			<li><a href="planServlet?action=Query" class="btn">See Plan</a></li>
-			<c:if test="${user.getRole().toString() == 'ADMINISTRATOR'}">
-				<li><a href="aircraft" class="btn">Add New Aircraft</a></li>
-				<li><a href="user-management" class="btn">User Management</a></li>
-				<li><a href="flight-management" class="btn">Manage Flights</a></li>
-			</c:if>
-		</ul>
-		<p class="success mt-2">${message}</p>
-	</header>
-	<c:if test="${user.getRole().equals(roles['PILOT'])}">
-		<section class="container mt-2">
-			<h2 class="section-title center">Log Flight Hours</h2>
-			<form action="logFlightHours" method="post" class="my-2">
-				<fieldset class="form-group mt-2">
-					<label for="flight_date" class="form-label">Flight Date:</label>
-					<input type="date" id="flight_date" name="flight_date" class="form-input"required>
-					<label for="hours_flighted" class="form-label ">Hours Flown:</label>
-					<input type="number" id="hours_flighted" name="hours_flighted" step="0.01" class="form-input" required>
-				</fieldset>
-				<label for="notes" class="form-label mt-2">Notes (optional):</label>
-				<textarea id="notes" name="notes"class="form-textarea"></textarea>
-				<button type="submit" class="form-btn mt-2">Log Flight Hours</button>
-			</form>
-			<h2 class="section-title center">Flight Statistics</h2>
-			<div id="aa">&nbsp;</div>
-
-			<div class="flex">
-				<div id="flightPieChart" class="flex-1"></div>
-				<div id="airportChart" class="flex-1"></div>
-			</div>
-			<h2 class="section-title center">Flights</h2>
-			<div class="flightTableData mt-2">
-				<table class="dashboard-table w-full border-2 rounded mt-2">
-					<thead>
-					<tr>
-						<th>Flight Number</th>
-						<th>Departure Time</th>
-						<th>Arrival Time</th>
-						<th>Origin</th>
-						<th>Destination</th>
-						<th>Status</th>
-					</tr>
-					</thead>
-					<tbody>
-					<c:forEach var="item" items="${flights}">
-						<tr>
-							<td>${item.flightNumber}</td>
-							<td>${item.departureTime}</td>
-							<td>${item.arrivalTime}</td>
-							<td>${item.origin}</td>
-							<td>${item.destination}</td>
-							<td>${item.status}</td>
-						</tr>
-					</c:forEach>
-					</tbody>
-				</table>
-			</div>
-		</section>
-		<a href="./dashboard?feedback=true" class="feedback-btn"><img src="${pageContext.request.contextPath}/assets/images/feedback-icon.png" alt="submit feedback" width="24" height="24" /></a>
-    </c:if>
-		
+    <jsp:include page='./components/header.jsp' />
+    <main>
+        <header class="mb-2">
+        	<h1 class="subtitle">Dashboard</h1>
+            <ul class="main-header">
+            	<li><a href="planServlet?action=Query" class="btn">See Plan</a></li>
+                <li><a href="airport" class="btn">See Airports</a></li>
+                <c:if test="${user.getRole().toString() == 'ADMINISTRATOR'}">
+                    <li><a href="aircraft" class="btn">Add New Aircraft</a></li>
+                    <li><a href="user-management" class="btn">User Management</a></li>
+                    <li><a href="flight-management" class="btn">Manage Flights</a></li>
+                </c:if>
+            </ul>
+            <p class="success mt-2">${message}</p>
+        </header>
+		<c:if test="${user.getRole().equals(roles['PILOT'])}">
+			<section class="container mt-2">
+	            <h2 class="section-title center">Log Flight Hours</h2>
+	            <form action="logFlightHours" method="post" class="my-2">
+	            	<fieldset class="form-group mt-2">
+		            	<label for="flight_date" class="form-label">Flight Date:</label>
+		                <input type="date" id="flight_date" name="flight_date" class="form-input"required>
+		                <label for="hours_flighted" class="form-label ">Hours Flown:</label>
+		                <input type="number" id="hours_flighted" name="hours_flighted" step="0.01" class="form-input" required>
+	            	</fieldset>
+	                <label for="notes" class="form-label mt-2">Notes (optional):</label>
+	                <textarea id="notes" name="notes"class="form-textarea"></textarea>
+	                <button type="submit" class="form-btn mt-2">Log Flight Hours</button>
+	            </form>
+	            <h2 class="section-title center">Flight Statistics</h2>
+                <div id="aa">&nbsp;</div>
+               	
+               	<div class="flex">
+	                <div id="flightPieChart" class="flex-1"></div>
+	                <div id="airportChart" class="flex-1"></div>
+                </div>
+                <h2 class="section-title center">Flights</h2>
+				<div class="flightTableData mt-2">
+	                    <table class="dashboard-table w-full border-2 rounded mt-2">
+	                        <thead>
+		                        <tr>
+		                            <th>Flight Number</th>
+		                            <th>Departure Time</th>
+		                            <th>Arrival Time</th>
+		                            <th>Origin</th>
+		                            <th>Destination</th>
+		                            <th>Status</th>
+		                        </tr>
+	                        </thead>
+	                        <tbody>
+	                        <c:forEach var="item" items="${flights}">
+	                            <tr>
+	                                <td>${item.flightNumber}</td>
+	                                <td>${item.departureTime}</td>
+	                                <td>${item.arrivalTime}</td>
+	                                <td>${item.origin}</td>
+	                                <td>${item.destination}</td>
+	                                <td>${item.status}</td>
+	                            </tr>
+	                        </c:forEach>
+	                        </tbody>
+	                    </table>
+	            </div>    
+			</section>
+			<a href="./dashboard?feedback=true" class="feedback-btn"><img src="${pageContext.request.contextPath}/assets/images/feedback-icon.png" alt="submit feedback" width="24" height="24" /></a>
+        </c:if>	
         <c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 	        <section class="container">
 	            <h2 class="section-title center">Pending Flight Hour Approvals</h2>

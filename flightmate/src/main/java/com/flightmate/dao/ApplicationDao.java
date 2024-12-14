@@ -104,24 +104,24 @@ public class ApplicationDao {
     }
 
     public void createPilotHoursTable() {
-        try (
-                Connection conn = DBConnection.getDBInstance();
-                Statement stmt = conn.createStatement();
-        ) {
-            if (!tableExists(conn, PILOT_HOURS_TABLE)) {
-                System.out.print("Creating Pilot_Hours Table...");
-                String sql = "CREATE TABLE IF NOT EXISTS "+ PILOT_HOURS_TABLE +" ("
-                        + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                        + "pilot_id INT NOT NULL, "
-                        + "flight_date DATE NOT NULL, "
-                        + "hours_flighted DECIMAL(5,2) NOT NULL, "
-                        + "notes TEXT, "
-                        + "approval_status VARCHAR(15) DEFAULT 'PENDING', "
-                        + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-                        + "FOREIGN KEY (pilot_id) REFERENCES users(user_id));";
-                stmt.executeUpdate(sql);
-                System.out.println("Created Pilot Hours Table");
-            }
+    	 try (
+                 Connection conn = DBConnection.getDBInstance();
+                 Statement stmt = conn.createStatement();
+             ) {
+             if (!tableExists(conn, PILOT_HOURS_TABLE)) {
+            	 System.out.print("Creating Pilot_Hours Table...");
+            	 String sql = "CREATE TABLE IF NOT EXISTS "+ PILOT_HOURS_TABLE +" ("
+                         + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                         + "pilot_id INT NOT NULL, "
+                         + "flight_date DATE NOT NULL, "
+                         + "hours_flighted DECIMAL(5,2) NOT NULL, "
+                         + "notes TEXT, "
+                         + "approval_status VARCHAR(15) DEFAULT 'PENDING', "
+                         + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+                         + "FOREIGN KEY (pilot_id) REFERENCES users(user_id) ON DELETE CASCADE);";
+            	 stmt.executeUpdate(sql);
+            	 System.out.println("Created Pilot Hours Table");
+             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }

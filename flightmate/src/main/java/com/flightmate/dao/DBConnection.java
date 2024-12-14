@@ -24,17 +24,17 @@ public class DBConnection {
 		ApplicationDao.getDao().createFeedbackTable();
 		ApplicationDao.getDao().createPlanTable();
 
-	}
-
-	public static Connection getDBInstance() throws ClassNotFoundException {
-		initDB();
-		Connection connection = null;
-		try {
-			connection = DBUtil.getConnection(DBType.MYSQL);
-		} catch (SQLException e) {
-			DBUtil.processException(e);
-		};
-
-		return connection;
-	}
+	}	
+	
+    public static Connection getDBInstance() throws ClassNotFoundException {
+    	initDB();
+    	Connection connection = null;
+        try {
+        	connection = DBUtil.getConnection(DBType.MYSQL);
+        } catch (SQLException e) {
+        	DBUtil.processException(e);
+        };
+        
+        return connection;
+    }
 }
