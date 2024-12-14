@@ -50,6 +50,34 @@ public class AircraftDao {
             return false;
         }
     }
+    
+    public List<Aircraft> getAircraftByAirportId(int airportId) throws ClassNotFoundException {
+        List<Aircraft> aircraftList = new ArrayList<>();
+        System.out.println("Connecting to database...");
+        String sql = "SELECT * FROM Aircrafts WHERE airport_id = ?";
+        try (Connection conn = DBConnection.getDBInstance();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, airportId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Aircraft aircraft = new Aircraft(rs.getInt("aircraft_id"), 
+                		                         rs.getString("aircraft_model"), 
+                		                         rs.getDate("manufacture_date").toLocalDate(), 
+                		                         rs.getDate("last_maintenance_date").toLocalDate(),
+                		                         rs.getDate("next_maintenance_date").toLocalDate(), 
+                		                         rs.getString("aircraft_notes"), 
+                		                         rs.getTimestamp("created_at").toLocalDateTime(), 
+                		                         rs.getInt("administrator_id"), 
+                		                         rs.getInt("airport_id"));
+                // Add more fields as necessary
+                aircraftList.add(aircraft);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions or throw them as needed
+        }
+        return aircraftList;
+    }
 
     // Method to get all aircrafts from the database
     public List<Aircraft> getAllAircraft() {
