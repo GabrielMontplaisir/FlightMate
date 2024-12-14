@@ -1,4 +1,4 @@
-package com.flightmate.servlets;
+package com.flightmate.servlets.aircraft;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import com.flightmate.beans.Aircraft;
 import com.flightmate.beans.Airport;
 import com.flightmate.beans.User;
 import com.flightmate.dao.AircraftDao;
-import com.flightmate.dao.AirportDao; // For fetching airports
+import com.flightmate.dao.AirportDao;
 import com.flightmate.dao.UserDao;
 import com.flightmate.libs.Role;
 import com.flightmate.libs.Route;
@@ -29,66 +29,54 @@ public class AircraftServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = SessionService.srv.getSessionUser(req);
-        
-        if (user == null || user.getRole() != Role.ADMINISTRATOR) {
-            resp.sendRedirect(Route.LOGIN);
-            return;
-        } 
-        
-//        if (airportId != null && !airportId.isEmpty()) {
-//            handleAircraftDetailsRequest(Integer.parseInt(airportId), resp);
-//            return;
-//        }
-        
-        List<User> administrators = UserDao.getDao().getAllAdministrators();
-        List<Airport> airports = AirportDao.getDao().getAllAirports();
 
-        req.setAttribute("administrators", administrators);
-        req.setAttribute("airports", airports);
-        req.getRequestDispatcher(Route.AIRCRAFT).forward(req, resp);
-    }
-    
-//    private void handleAircraftDetailsRequest(int airportId, HttpServletResponse resp) throws IOException {
-//        resp.setContentType("text/html; charset=UTF-8");
-//        List<Aircraft> aircraftList = AircraftDao.getDao().getAircraftByAirportId(airportId);
-//        StringBuilder htmlResponse = new StringBuilder();
-//
-//        if (aircraftList.isEmpty()) {
-//            htmlResponse.append("<p>No aircraft found for this airport.</p>");
-//        } else {
-//            htmlResponse.append("<table><tr><th>Model</th><th>Manufacture Date</th><th>Last Maintenance</th><th>Next Maintenance</th></tr>");
-//            for (Aircraft aircraft : aircraftList) {
-//                htmlResponse.append("<tr>")
-//                        .append("<td>").append(aircraft.getAircraftModel()).append("</td>")
-//                        .append("<td>").append(aircraft.getManufactureDate()).append("</td>")
-//                        .append("<td>").append(aircraft.getLastMaintenanceDate()).append("</td>")
-//                        .append("<td>").append(aircraft.getNextMaintenanceDate()).append("</td>")
-//                        .append("</tr>");
-//            }
-//            htmlResponse.append("</table>");
-//        }
-//
-//        resp.getWriter().write(htmlResponse.toString());
-//    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = SessionService.srv.getSessionUser(req);
-
+        // Check if user is logged in and has ADMINISTRATOR role
         if (user == null || user.getRole() != Role.ADMINISTRATOR) {
             resp.sendRedirect(Route.LOGIN);
             return;
         }
 
+        // Fetch list of aircraft, administrators, and airports
+        List<Aircraft> aircraftList = AircraftDao.getDao().getAllAircraft();
+        List<User> administrators = UserDao.getDao().getAllAdministrators();
+        List<Airport> airports = AirportDao.getDao().getAllAirports();
+
+        // Set attributes for the JSP
+        req.setAttribute("aircrafts", aircraftList);
+        req.setAttribute("administrators", administrators);
+        req.setAttribute("airports", airports);
+
+        // Forward to the aircraft management page
+        req.getRequestDispatcher(Route.AIRCRAFT).forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = SessionService.srv.getSessionUser(req);
+
+        // Check if user is logged in and has ADMINISTRATOR role
+        if (user == null || user.getRole() != Role.ADMINISTRATOR) {
+            resp.sendRedirect(Route.LOGIN);
+            return;
+        }
+
+        // Retrieve form parameters
         String aircraftModel = req.getParameter("aircraftModel");
-        LocalDate manufactureDate = LocalDate.parse(req.getParameter("manufactureDate"));
-        LocalDate lastMaintenanceDate = LocalDate.parse(req.getParameter("lastMaintenanceDate"));
-        LocalDate nextMaintenanceDate = LocalDate.parse(req.getParameter("nextMaintenanceDate"));
+        String manufactureDateStr = req.getParameter("manufactureDate");
+        String lastMaintenanceDateStr = req.getParameter("lastMaintenanceDate");
+        String nextMaintenanceDateStr = req.getParameter("nextMaintenanceDate");
         String aircraftNotes = req.getParameter("aircraftNotes");
         int administratorId = Integer.parseInt(req.getParameter("administratorId"));
         int airportId = Integer.parseInt(req.getParameter("airportId"));
 
-        Aircraft aircraft = new AircraftBuilder()
+        // Validate and parse date values
+        try {
+            LocalDate manufactureDate = LocalDate.parse(manufactureDateStr);
+            LocalDate lastMaintenanceDate = LocalDate.parse(lastMaintenanceDateStr);
+            LocalDate nextMaintenanceDate = LocalDate.parse(nextMaintenanceDateStr);
+
+            // Build Aircraft object using builder pattern
+            Aircraft aircraft = new AircraftBuilder()
                 .setAircraftModel(aircraftModel)
                 .setManufactureDate(manufactureDate)
                 .setLastMaintenanceDate(lastMaintenanceDate)
@@ -99,17 +87,23 @@ public class AircraftServlet extends HttpServlet {
                 .setAirportId(airportId)
                 .create();
 
-        // Save the Aircraft to the database
-        boolean success = AircraftDao.addAircraft(aircraft);
+            // Save the Aircraft to the database
+            boolean success = AircraftDao.addAircraft(aircraft);
 
-        if (success) {
-            req.getSession().setAttribute("success", "Aircraft added successfully!");  // Use session to store success message
-        } else {
-            req.getSession().setAttribute("error", "Failed to add aircraft.");
+            // Set success or error message in the session
+            if (success) {
+                req.getSession().setAttribute("success", "Aircraft added successfully!");
+            } else {
+                req.getSession().setAttribute("error", "Failed to add aircraft.");
+            }
+
+        } catch (Exception e) {
+            req.getSession().setAttribute("error", "Invalid data entered: " + e.getMessage());
         }
 
-        // Redirect to avoid form resubmission and display the message only after submission
-        resp.sendRedirect(Route.AIRCRAFT);  // Redirect to prevent the message from showing before submission
+        // Redirect after POST to avoid form resubmission and show the updated list of aircraft
+        resp.sendRedirect("/flightmate/aircraft"); // This should redirect to the correct servlet
     }
-
+    
+    
 }

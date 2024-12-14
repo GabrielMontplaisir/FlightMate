@@ -6,7 +6,8 @@
 <head>    
     <jsp:include page="./components/head.jsp" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
-    <title>FlightMate | List of Airports</title>
+    <title>FlightMate | List of Airports</title>      
+    
 </head>
 <body class="background">
 	<jsp:include page='./components/header.jsp' />
@@ -48,6 +49,7 @@
 	            <th>City</th>
 	            <th>Country</th>
 	            <th>Runways</th>
+	            <th>View aircrafts</th>	            
 	            <c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 	            	<th>Actions</th>
 	            </c:if>
@@ -63,6 +65,7 @@
 			            <td><input type="text" class="form-input w-full" name="city" value="${airport.getCity()}" ${disabledInput}/></td>
 			            <td><input type="text" class="form-input w-full" name="country" value="${airport.getCountry()}" ${disabledInput}/></td>
 			            <td><input type="number" class="form-input w-full" name="runways" value="${airport.getRunways()}" ${disabledInput}/></td>
+			            <td><a href="airport?action=viewAircraft&airportId=${airport.getAirportId()}">View Aircrafts</a></td>
 			            <c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 				            <td>
 				                <input type="submit" name="action" value="Update" class="btn w-full" />
@@ -71,6 +74,7 @@
 			            </c:if>
 			        </form>
 		        </tr>
+		       
 	        </c:forEach>
         </tbody>
     </table>
