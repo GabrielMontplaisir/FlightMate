@@ -5,10 +5,10 @@
 <head>
 	<jsp:include page="./components/head.jsp" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
-    <c:if test="${user.getRole().equals(roles['PILOT'])}">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
-    </c:if>
+	<c:if test="${user.getRole().equals(roles['PILOT'])}">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+	</c:if>
 	<title>FlightMate | Dashboard</title>
 </head>
 <body class="background">
@@ -17,7 +17,7 @@
         <header class="mb-2">
         	<h1 class="subtitle">Dashboard</h1>
             <ul class="main-header">
-                <li><a href="upload" class="btn">Upload Documents</a></li>
+            	<li><a href="planServlet?action=Query" class="btn">See Plan</a></li>
                 <li><a href="airport" class="btn">See Airports</a></li>
                 <c:if test="${user.getRole().toString() == 'ADMINISTRATOR'}">
                     <li><a href="aircraft" class="btn">Add New Aircraft</a></li>
@@ -27,7 +27,6 @@
             </ul>
             <p class="success mt-2">${message}</p>
         </header>
-                                   
 		<c:if test="${user.getRole().equals(roles['PILOT'])}">
 			<section class="container mt-2">
 	            <h2 class="section-title center">Log Flight Hours</h2>
@@ -78,15 +77,14 @@
 	            </div>    
 			</section>
 			<a href="./dashboard?feedback=true" class="feedback-btn"><img src="${pageContext.request.contextPath}/assets/images/feedback-icon.png" alt="submit feedback" width="24" height="24" /></a>
-        </c:if>
-		
+        </c:if>	
         <c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 	        <section class="container">
 	            <h2 class="section-title center">Pending Flight Hour Approvals</h2>
 	            <table class="dashboard-table w-full border-2 rounded mt-2">
 	                <thead>
 	                    <tr>
-	                        <th>Pilot Name</th> <!-- Fix this so it retrieves the pilot name instead -->
+	                        <th>Pilot Id</th>
 	                        <th>Flight Date</th>
 	                        <th>Hours</th>
 	                        <th>Notes</th>
@@ -96,7 +94,7 @@
 	                <tbody>
 	                    <c:forEach var="hour" items="${pendingFlightHours}">
 	                        <tr>
-	                            <td>${hour.pilotId}</td><!-- Fix this so it retrieves the pilot name instead -->
+	                            <td>${hour.pilotId}</td>
 	                            <td>${hour.flightDate}</td>
 	                            <td>${hour.hoursFlighted}</td>
 	                            <td>${hour.notes}</td>
@@ -115,7 +113,8 @@
 	                </tbody>
 	            </table>
 	        </section>
-        </c:if>
+        </c:if>     
+        
         <c:if test="${not empty param.feedback}">
 	        <aside class="container mt-auto w-fit ml-6 border-3">
 		        <header>

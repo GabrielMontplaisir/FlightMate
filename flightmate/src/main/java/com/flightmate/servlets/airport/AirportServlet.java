@@ -3,15 +3,19 @@ package com.flightmate.servlets.airport;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.flightmate.beans.Aircraft;
 import com.flightmate.beans.Airport;
 import com.flightmate.beans.User;
+import com.flightmate.dao.AircraftDao;
 import com.flightmate.dao.AirportDao;
 import com.flightmate.libs.Role;
 import com.flightmate.libs.Route;
@@ -34,14 +38,31 @@ public class AirportServlet extends HttpServlet {
 			req.setAttribute("disabledInput", "disabled");
 		}
 		
+		String action = req.getParameter("action");
+        if ("viewAircraft".equals(action)) {
+            try {
+				viewAircraft(req, resp);
+				return;
+			} catch (ClassNotFoundException | ServletException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+		
         List<Airport> airports = AirportDao.getDao().getAllAirports();
         
-        req.setAttribute("airports", airports);
-		
+        req.setAttribute("airports", airports);		
 		
 						
 		req.getRequestDispatcher(Route.AIRPORT).forward(req, resp);
 	}
+	 private void viewAircraft(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException {
+	        int airportId = Integer.parseInt(request.getParameter("airportId"));
+	        List<Aircraft> aircraftList = AircraftDao.getDao().getAircraftByAirportId(airportId);
+	        request.setAttribute("aircraftList", aircraftList);  
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("/aircraft_list.jsp");
+	        dispatcher.forward(request, response);
+	    }
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

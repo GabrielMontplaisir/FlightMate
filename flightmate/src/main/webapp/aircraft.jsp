@@ -4,10 +4,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<jsp:include page="./components/head.jsp" />
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/dashboard.css">
-<title>FlightMate | Aircrafts</title>
+    <jsp:include page="./components/head.jsp" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+    <title>FlightMate | Aircrafts</title>
 </head>
 
 <body class="background">
@@ -19,19 +18,15 @@
 		<c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 			<section class="container">
 				<h2 class="section-title">Add an Aircraft</h2>
-				<form action="${pageContext.request.contextPath}/aircraft"
-					method="POST">
+				<form action="${pageContext.request.contextPath}/aircraft" method="POST">
 					<fieldset class="form-group mt-2">
-						<label for="aircraftModel" class="form-label">Aircraft
-							Model:</label> <input type="text" id="aircraftModel" name="aircraftModel"
-							class="form-input" required><br> <label
-							for="manufactureDate" class="form-label">Manufacture
-							Date:</label> <input type="date" id="manufactureDate"
-							name="manufactureDate" class="form-input" required><br>
-
-						<label for="lastMaintenanceDate" class="form-label">Last
-							Maintenance Date:</label> <input type="date" id="lastMaintenanceDate"
-							name="lastMaintenanceDate" class="form-input" required><br>
+						<label for="aircraftModel" class="form-label">Aircraft Model:</label>
+							<input type="text" id="aircraftModel" name="aircraftModel" class="form-input" required><br> 
+							<label for="manufactureDate" class="form-label">Manufacture Date:</label> 
+							<input type="date" id="manufactureDate" name="manufactureDate" class="form-input" required><br>
+							
+							<label for="lastMaintenanceDate" class="form-label">Last Maintenance Date:</label> 
+							<input type="date" id="lastMaintenanceDate" name="lastMaintenanceDate" class="form-input" required><br>
 
 						<label for="nextMaintenanceDate" class="form-label">Next
 							Maintenance Date:</label> <input type="date" id="nextMaintenanceDate"
@@ -55,7 +50,6 @@
 								<option value="${airport.getAirportId()}">${airport.getAirportName()}</option>
 							</c:forEach>
 						</select><br>
-
 						<button type="submit" class="form-btn">Add Aircraft</button>
 					</fieldset>
 				</form>
@@ -74,7 +68,12 @@
 					<th>Notes</th>
 					<th>Administrator</th>
 					<th>Airport</th>
-
+                        <label for="administratorId" class="form-label">Administrator:</label>
+                        <select id="administratorId" name="administratorId" class="form-input" required>
+                            <c:forEach var="admin" items="${administrators}">
+                                <option value="${admin.getUserId()}">${admin.getFirstName()} ${admin.getLastName()}</option>
+                            </c:forEach>
+                        </select><br>
 					<c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 						<th>Actions</th>
 					</c:if>
