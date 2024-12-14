@@ -68,12 +68,7 @@
 					<th>Notes</th>
 					<th>Administrator</th>
 					<th>Airport</th>
-                        <label for="administratorId" class="form-label">Administrator:</label>
-                        <select id="administratorId" name="administratorId" class="form-input" required>
-                            <c:forEach var="admin" items="${administrators}">
-                                <option value="${admin.getUserId()}">${admin.getFirstName()} ${admin.getLastName()}</option>
-                            </c:forEach>
-                        </select><br>
+                        
 					<c:if test="${user.getRole().equals(roles['ADMINISTRATOR'])}">
 						<th>Actions</th>
 					</c:if>
