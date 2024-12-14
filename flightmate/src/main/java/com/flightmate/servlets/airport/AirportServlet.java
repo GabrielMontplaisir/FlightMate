@@ -42,6 +42,7 @@ public class AirportServlet extends HttpServlet {
         if ("viewAircraft".equals(action)) {
             try {
 				viewAircraft(req, resp);
+				return;
 			} catch (ClassNotFoundException | ServletException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
