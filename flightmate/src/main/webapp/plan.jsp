@@ -16,7 +16,7 @@
     <h1>Plan Management</h1>
     <c:if test="${user.getRole().equals(roles['PILOT'])}">
         <section class="container">
-            <h2 class="section-title">Add an Plan</h2>
+            <h2 class="section-title">Add a Plan</h2>
             <form action="/planServlet?action=Add" method="POST" onsubmit="return validateForm()">
                 <fieldset class="form-group mt-2">
                     <label for="aircraftModel" class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aircraft Model:</label>
@@ -140,7 +140,7 @@
         var departureDatetimeStamp=Date.parse(departureDatetime);
         var arrivalDatetimeStamp=Date.parse(arrivalDatetime);
         if(arrivalDatetimeStamp-departureDatetimeStamp<=0){
-            alert("Arrival Date time must be greater than Departure Date time.")
+            alert("Arrival date time must be greater than Departure date time.")
             return false;
         }
         return true;
@@ -157,16 +157,16 @@
     var flag="${param.get("flag")}"
     switch (flag) {
         case "Add":
-            alert("Plan add success!");
+            alert("Plan added successfully!");
             break;
         case "Update":
-            alert("Plan update success!");
+            alert("Plan updated successfully!");
             break;
         case "Delete":
-            alert("Plan delete success!");
+            alert("Plan deleted successfully!");
             break;
         case "Verify":
-            alert("Plan verify success!");
+            alert("Plan verified!");
             break;
     }
 </script>
